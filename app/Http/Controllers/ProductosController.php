@@ -104,6 +104,7 @@ class ProductosController extends Controller
     {
         $data = $request->all();
 
+        // Validaciones https://laravel.com/docs/8.x/validation
         $validator = Validator::make($data, [
             'nombre' => 'required',
             'descripcion' => 'nullable',
@@ -135,6 +136,8 @@ class ProductosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    // OJITO: en modo producion cambiar esta funcion.
     public function destroy($id)
     {
         $producto = Producto::find($id);
