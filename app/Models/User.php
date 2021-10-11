@@ -53,4 +53,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // Relacion N a M
+    public function ventas()
+    {
+        return $this->belongsToMany(Producto::class, 'ventas', 'user_id', 'producto_codigo_interno');
+    }
+    public function mermas()
+    {
+        return $this->belongsToMany(Producto::class, 'mermas', 'user_id', 'producto_codigo_interno');
+    }
+    public function entradas()
+    {
+        return $this->belongsToMany(Producto::class, 'entradas', 'user_id', 'producto_codigo_interno');
+    }
 }

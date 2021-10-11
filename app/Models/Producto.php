@@ -27,4 +27,18 @@ class Producto extends Model
         'cantidad',
         'stock_critico'
     ];
+
+    // Relacion N a M
+    public function ventas()
+    {
+        return $this->belongsToMany(User::class, 'ventas', 'producto_codigo_interno', 'user_id');
+    }
+    public function mermas()
+    {
+        return $this->belongsToMany(User::class, 'mermas', 'producto_codigo_interno', 'user_id');
+    }
+    public function entradas()
+    {
+        return $this->belongsToMany(User::class, 'entradas', 'producto_codigo_interno', 'user_id');
+    }
 }
