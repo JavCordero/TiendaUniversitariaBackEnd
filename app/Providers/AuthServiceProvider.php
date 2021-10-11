@@ -28,6 +28,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        // Aca se define el Scope
+        Passport::tokensCan([
+            'administrador' => 'Administrador@ de la tienda universitaria',
+            'vendedor' => 'Vendedor@ de la tienda universitaria',
+        ]);
+
         Passport::routes();
     }
 }
