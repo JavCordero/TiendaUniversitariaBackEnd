@@ -20,9 +20,22 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+/*
+Hay un middleware que verifica el rol del usuario.
+Roles:
+    - administrador
+    - vendedor
+Ej:
+    ->middleware(['auth:api', 'scope:administrador,vendedor']);
+*/
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+// ENDPOINTS
+// EJ: http://127.0.0.1:8000/api/productos/123
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
