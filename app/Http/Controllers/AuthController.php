@@ -23,10 +23,11 @@ class AuthController extends Controller
 
         $validator = Validator::make($data, [
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required|email|unique:users',
             'password_confirmed' => 'required',
             'nombre' => 'required',
-            'rut' => 'required'
+            'rut' => 'required',
+            'rol' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -51,7 +52,7 @@ class AuthController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required'
         ]);
 

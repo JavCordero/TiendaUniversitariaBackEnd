@@ -48,13 +48,13 @@ class ProductosController extends Controller
         $data = $request->all();
         $validator = Validator::make($data, [
             'nombre' => 'required',
-            'descripcion' => 'required',
+            'descripcion' => 'nullable',
             'codigo_interno' => 'required',
             'codigo_barra' => 'required',
-            'imagen' => 'required',
-            'precio' => 'required',
-            'cantidad' => 'required',
-            'stock_critico' => 'required'
+            'imagen' => 'nullable',
+            'precio' => 'required|numeric',
+            'cantidad' => 'required|numeric',
+            'stock_critico' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {
@@ -110,9 +110,9 @@ class ProductosController extends Controller
             'codigo_interno' => 'required',
             'codigo_barra' => 'required',
             'imagen' => 'nullable',
-            'precio' => 'required',
-            'cantidad' => 'required',
-            'stock_critico' => 'required'
+            'precio' => 'required|numeric',
+            'cantidad' => 'required|numeric',
+            'stock_critico' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {
