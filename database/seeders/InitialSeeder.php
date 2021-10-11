@@ -48,7 +48,7 @@ class InitialSeeder extends Seeder
             'email' => "reu@gmail.com",
             'password' => bcrypt("123123"),
             'nombre' => "Reu",
-            'rol' => "admin",
+            'rol' => "vendedor",
         ]);
 
         // Crear Productos
