@@ -25,7 +25,6 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password_confirmed' => 'required',
-            'rut' => 'required',
             'rol' => 'required'
         ]);
 
@@ -52,6 +51,8 @@ class AuthController extends Controller
             ], 201);
             // FIN CODIGO RODRIGO
         }
+
+        return response(['error' => $validator->errors(), 'message' => 'Error asdf'], 500);
     }
 
     public function login(Request $request)

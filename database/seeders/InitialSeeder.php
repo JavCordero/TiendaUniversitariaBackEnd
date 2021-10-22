@@ -26,7 +26,6 @@ class InitialSeeder extends Seeder
         // Crear Usuarios
         User::create([
             'name' => "Pain",
-            'rut' => "15323822840",
             'email' => "pain@gmail.com",
             'password' => bcrypt("123123"),
             'rol' => "administrador",
@@ -34,7 +33,6 @@ class InitialSeeder extends Seeder
 
         User::create([
             'name' => "Mikasa",
-            'rut' => "194534712379",
             'email' => "mikasa@gmail.com",
             'password' => bcrypt("123123"),
             'rol' => "administrador",
@@ -42,7 +40,6 @@ class InitialSeeder extends Seeder
 
         User::create([
             'name' => "Reu",
-            'rut' => "123123123",
             'email' => "reu@gmail.com",
             'password' => bcrypt("123123"),
             'rol' => "vendedor",
