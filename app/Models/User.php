@@ -33,7 +33,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'nombre',
         'rol',
         'rut'
     ];
