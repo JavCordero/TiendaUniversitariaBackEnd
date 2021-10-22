@@ -25,7 +25,6 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password_confirmed' => 'required',
-            'nombre' => 'required',
             'rut' => 'required',
             'rol' => 'required'
         ]);
@@ -39,11 +38,19 @@ class AuthController extends Controller
             // accesstoken devuelve el token en texto plano
             $accessToken = $user->createToken('authToken')->accessToken;
 
+            // INICIO CODIGO BIJUU
             return response([
                 'user' => $user,
                 'access_token' => $accessToken,
                 'message' => 'Creado exitosamente'
             ], 201);
+            // FIN CODIGO BIJUU
+
+            // INICIO CODIGO RODRIGO
+            return response([
+                'mensaje' => 'Usuario creado'
+            ], 201);
+            // FIN CODIGO RODRIGO
         }
     }
 
@@ -65,12 +72,49 @@ class AuthController extends Controller
 
             /** @var \App\Models\User */
             $user = Auth::user();
-            $accessToken = $user->createToken('authToken', [$user->rol])->accessToken;
+
+            $tokenResult = $user->createToken('authToken', [$user->rol]);
+            $token = $tokenResult->token;
+
+            // RES TOKEN
+            // {
+            //     "id": "e4c1a4b30c5b00276850942add8604c1fece3c191b205209713177e0944adddc738a0668d03eecf6",
+            //     "user_id": 3,
+            //     "client_id": 1,
+            //     "name": "authToken",
+            //     "scopes": [
+            //         "vendedor"
+            //     ],
+            //     "revoked": false,
+            //     "created_at": "2021-10-13 08:39:13",
+            //     "updated_at": "2021-10-13 08:39:13",
+            //     "expires_at": "2022-10-13T08:39:13.000000Z"
+            // }
+
+            if ($request->remember_me) {
+                $token->expires_at = $token->expires_at; // agregar cantidad de tiempo extra (CARBON)
+            }
+            // return $token;
+
+            $accessToken = $tokenResult->accessToken;
+
+            // INICIO CODIGO BIJUU
             return response([
                 'user' => Auth::user(),
                 'access_token' => $accessToken,
                 'message' => 'Credenciales validas'
             ], 201);
+            // FIN CODIGO BIJUU
+
+            // INICIO CODIGO RODRIGO
+            return response([
+                'access_token' => $accessToken,
+                'token_type' => 'Bearer',
+                'rol' => $user->rol,
+                'expires_at' => "ASDF"
+            ], 201);
+            // FIN CODIGO RODRIGO
+
         } else {
             return response(['message' => "Credenciales invalidas"], 400); // OJITO: revisar codigo de respuesta http
         }

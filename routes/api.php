@@ -40,8 +40,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('logout', [AuthController::class, 'logout'])->middleware(['auth:api', 'scope:administrador']);
-Route::get('user', [AuthController::class, 'user'])->middleware(['auth:api', 'scope:administrador']);
+Route::get('logout', [AuthController::class, 'logout'])->middleware(['auth:api']);
+Route::get('user', [AuthController::class, 'user'])->middleware(['auth:api']);
 
 
 // Route::group([
@@ -53,7 +53,7 @@ Route::get('user', [AuthController::class, 'user'])->middleware(['auth:api', 'sc
 // });
 
 // Producto
-Route::get('/productos', [ProductosController::class, 'index']);
+Route::get('/productos', [ProductosController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);;
 Route::get('/productos/{id}', [ProductosController::class, 'show']);
 Route::post('/productos', [ProductosController::class, 'store']);
 Route::put('/productos/{id}', [ProductosController::class, 'update']);

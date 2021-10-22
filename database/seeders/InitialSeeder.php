@@ -29,7 +29,6 @@ class InitialSeeder extends Seeder
             'rut' => "15323822840",
             'email' => "pain@gmail.com",
             'password' => bcrypt("123123"),
-            'nombre' => "Pain",
             'rol' => "administrador",
         ]);
 
@@ -38,7 +37,6 @@ class InitialSeeder extends Seeder
             'rut' => "194534712379",
             'email' => "mikasa@gmail.com",
             'password' => bcrypt("123123"),
-            'nombre' => "Mikasa",
             'rol' => "administrador",
         ]);
 
@@ -47,7 +45,6 @@ class InitialSeeder extends Seeder
             'rut' => "123123123",
             'email' => "reu@gmail.com",
             'password' => bcrypt("123123"),
-            'nombre' => "Reu",
             'rol' => "vendedor",
         ]);
 
