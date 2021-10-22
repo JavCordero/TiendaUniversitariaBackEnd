@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->timestamps();
 
             $table->string('rol');
-            $table->string('rut')->unique();
             $table->boolean('estado');
         });
     }

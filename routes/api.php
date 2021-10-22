@@ -37,9 +37,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // ENDPOINTS
 // EJ: http://127.0.0.1:8000/api/productos/123
 
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'register'])->middleware(['auth:api', 'scope:administrador']);
 Route::post('/login', [AuthController::class, 'login']);
-
 Route::get('logout', [AuthController::class, 'logout'])->middleware(['auth:api']);
 Route::get('user', [AuthController::class, 'user'])->middleware(['auth:api']);
 
