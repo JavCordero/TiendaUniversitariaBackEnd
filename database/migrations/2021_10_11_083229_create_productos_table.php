@@ -19,8 +19,9 @@ class CreateProductosTable extends Migration
 
             $table->string('nombre');
             $table->string('descripcion')->nullable();
-            $table->string('codigo_interno')->primary();;
+            $table->string('codigo_interno')->primary();
             $table->string('codigo_barra')->unique();
+            $table->string('categoria');
             $table->string('imagen')->nullable();
             $table->integer('precio');
             $table->integer('cantidad');

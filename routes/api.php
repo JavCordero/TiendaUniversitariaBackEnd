@@ -52,11 +52,13 @@ Route::get('user', [AuthController::class, 'user'])->middleware(['auth:api']);
 // });
 
 // Producto
-Route::get('/productos', [ProductosController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);;
+Route::get('/productos', [ProductosController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
 Route::get('/productos/{id}', [ProductosController::class, 'show']);
 Route::post('/productos', [ProductosController::class, 'store']);
 Route::put('/productos/{id}', [ProductosController::class, 'update']);
 Route::delete('/productos/{id}', [ProductosController::class, 'destroy']);
+
+Route::get('/correlativo-categorias/{categoria}', [ProductosController::class, 'correlativoCategorias'])->middleware(['auth:api', 'scope:administrador']);
 
 // Route::group([
 //     'prefix' => 'auth'
