@@ -61,6 +61,7 @@ Route::delete('/productos/{id}', [ProductosController::class, 'destroy']);
 
 //Ventas
 Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api', 'scope:vendedor']);
+Route::get('/correlativo-categorias/{categoria}', [ProductosController::class, 'correlativoCategorias'])->middleware(['auth:api', 'scope:administrador']);
 
 // Route::group([
 //     'prefix' => 'auth'

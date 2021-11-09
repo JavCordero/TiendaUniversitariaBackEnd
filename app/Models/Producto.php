@@ -22,6 +22,7 @@ class Producto extends Model
         'descripcion',
         'codigo_barra',
         'codigo_interno',
+        'categoria',
         'imagen',
         'precio',
         'cantidad',

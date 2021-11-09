@@ -51,6 +51,7 @@ class ProductosController extends Controller
             'descripcion' => 'nullable',
             'codigo_interno' => 'required',
             'codigo_barra' => 'required',
+            'categoria' => 'required',
             'imagen' => 'nullable',
             'precio' => 'required|numeric',
             'cantidad' => 'required|numeric',
@@ -110,6 +111,7 @@ class ProductosController extends Controller
             'descripcion' => 'nullable',
             'codigo_interno' => 'required',
             'codigo_barra' => 'required',
+            'categoria' => 'required',
             'imagen' => 'nullable',
             'precio' => 'required|numeric',
             'cantidad' => 'required|numeric',
@@ -147,6 +149,16 @@ class ProductosController extends Controller
             return response(['message' => "Eliminado exitosamente"], 200);
         } else {
             return response(['error' => 'Producto no encontrado'], 400); // OJITO: revisar codigo de respuesta http
+        }
+    }
+
+    public function correlativoCategorias($categoria){
+        $codigoProducto= Producto::where('categoria', $categoria)->max('codigo_interno');
+        if($codigoProducto == null){
+            return response(['respuesta'=> "0"], 200);
+        }else{
+            $ultimaCategoria= explode('-', $codigoProducto)[1];
+            return response(['respuesta'=> $ultimaCategoria], 200);
         }
     }
 }
