@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\VentasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,8 @@ Route::post('/productos', [ProductosController::class, 'store']);
 Route::put('/productos/{id}', [ProductosController::class, 'update']);
 Route::delete('/productos/{id}', [ProductosController::class, 'destroy']);
 
+//Ventas
+Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api', 'scope:vendedor']);
 Route::get('/correlativo-categorias/{categoria}', [ProductosController::class, 'correlativoCategorias'])->middleware(['auth:api', 'scope:administrador']);
 
 // Route::group([
