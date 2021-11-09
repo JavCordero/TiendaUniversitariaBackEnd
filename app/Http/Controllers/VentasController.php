@@ -3,9 +3,70 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
+
+use App\Http\Controllers\UsersController;
+
+use App\Notifications\AlertaStockCritico;
+use App\Models\Producto;
 
 class VentasController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function ventasMasiva(Request $request)
+    {
+        //Obtener Administradores
+        $administradores = UsersController::obtenerAdministradores();
+
+        //Recibe el JSON
+        $productos = $request->all();
+
+        //respuesta
+        $response = [];
+
+        //Se hace reduccion de stock
+        foreach($productos as $productosJson){
+
+            $codigoProducto = $productosJson["codigo_interno"];
+            $cantidad = $productosJson["cantidad"];
+
+            $cantidadPreVenta = $cantidad;
+
+            $producto = Producto::find($codigoProducto);
+
+            $cantidadPostVenta = $producto->cantidad-$cantidad;
+
+            //Notifica a los admins a traves de correo y base de datos
+            if($cantidadPostVenta >= 0){
+
+                $producto->cantidad = $cantidadPostVenta;
+                $json = ["nombre" => $producto->nombre, "message" => "Venta exitosa"];
+
+                array_push($response,$json);
+
+                if($cantidadPostVenta <= $producto->stock_critico){ //falta el && notificated == 0
+                    Notification::send($administradores, new AlertaStockCritico($producto));
+                }
+
+                $producto->save();
+
+            }
+
+            else{
+                $json = ["nombre" => $producto->nombre, "message" => "No se pudo vender la cantidad de {$cantidad} unidades de {$producto->nombre}"];
+                array_push($response,$json);
+            }
+            
+        }
+
+        return response($response,200);
+
+    }
+
     /**
      * Display a listing of the resource.
      *

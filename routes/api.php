@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\VentasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,11 +53,14 @@ Route::get('user', [AuthController::class, 'user'])->middleware(['auth:api']);
 // });
 
 // Producto
-Route::get('/productos', [ProductosController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);;
+Route::get('/productos', [ProductosController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
 Route::get('/productos/{id}', [ProductosController::class, 'show']);
 Route::post('/productos', [ProductosController::class, 'store']);
 Route::put('/productos/{id}', [ProductosController::class, 'update']);
 Route::delete('/productos/{id}', [ProductosController::class, 'destroy']);
+
+//Ventas
+Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api', 'scope:vendedor']);
 
 // Route::group([
 //     'prefix' => 'auth'

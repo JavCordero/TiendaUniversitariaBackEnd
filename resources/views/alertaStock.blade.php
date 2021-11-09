@@ -25,25 +25,13 @@
     
     <body class="antialiased">
 
-    <!--
-        <div>
-            <div class="p-6">
-
-                <p>!El producto {{$producto->nombre}} ha llegado a su stock cr&iacute;tico ({{$producto->stock_critico}}), actualmente quedan {{$producto->cantidad}} unidades.</p>
-
-                <br>
-
-                <p>Recuerde que el Stock Cr&iacute;tico para este producto es: {{$producto->stock_critico}}. </p>
-
-            </div>
-        </div>
-    -->
         @component('mail::message')
         # Nombre del administrador (Correo del administrador)
 
-        El producto {{$producto->nombre}} ha llegado a su stock crítico ({{$producto->stock_critico}}), actualmente quedan {{$producto->cantidad}} unidades.
+        El producto {{$producto->nombre}} ha llegado a su stock critico ({{$producto->stock_critico}}), actualmente quedan {{$producto->cantidad}} unidades.
 
-        Atentamente, Tienda Universitaria.
+        Atentamente, 
+                Tienda Universitaria.
         @endcomponent
 
     </body>
