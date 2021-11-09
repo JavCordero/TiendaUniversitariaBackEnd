@@ -155,10 +155,10 @@ class ProductosController extends Controller
     public function correlativoCategorias($categoria){
         $codigoProducto= Producto::where('categoria', $categoria)->max('codigo_interno');
         if($codigoProducto == null){
-            return response(['respuesta'=> "0"], 200);
+            return response([0], 200);
         }else{
             $ultimaCategoria= explode('-', $codigoProducto)[1];
-            return response(['respuesta'=> $ultimaCategoria], 200);
+            return response([$ultimaCategoria], 200);
         }
     }
 }
