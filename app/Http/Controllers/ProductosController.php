@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 // importamos los Facades
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 // importamos el modelo Producto
 use App\Models\Producto;
@@ -161,4 +162,18 @@ class ProductosController extends Controller
             return response([$ultimaCategoria], 200);
         }
     }
+
+    public function identificacionProductos()
+    {
+        $productos = Producto::all();
+        $arreglo= [];
+        
+        foreach($productos as $producto){
+            array_push($arreglo, $producto['codigo_interno']);
+        }
+        return response(['productos' => ($arreglo), 'message' => 'Recuperado exitosamente'], 200);
+       
+    }
+
+    
 }
