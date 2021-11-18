@@ -9,6 +9,8 @@ use App\Http\Controllers\UsersController;
 
 use App\Notifications\AlertaStockCritico;
 use App\Models\Producto;
+use App\Models\Venta;
+use App\Http\Resources\VentaResource;
 
 class VentasController extends Controller
 {
@@ -74,7 +76,8 @@ class VentasController extends Controller
      */
     public function index()
     {
-        //
+        $ventas = Venta::all();
+        return response(['ventas' => VentaResource::collection($ventas), 'message' => 'Recuperado exitosamente'], 200);
     }
 
     /**

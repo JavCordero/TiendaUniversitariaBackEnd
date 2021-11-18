@@ -60,6 +60,7 @@ Route::put('/productos/{id}', [ProductosController::class, 'update']);
 Route::delete('/productos/{id}', [ProductosController::class, 'destroy']);
 
 //Ventas
+Route::get('/ventas', [VentasController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
 Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api', 'scope:vendedor']);
 Route::get('/correlativo-categorias/{categoria}', [ProductosController::class, 'correlativoCategorias'])->middleware(['auth:api', 'scope:administrador']);
 
