@@ -161,4 +161,10 @@ class ProductosController extends Controller
             return response([$ultimaCategoria], 200);
         }
     }
+
+    public function stockCriticos(){
+        $productos= Producto::all();
+        
+    }
+
 }

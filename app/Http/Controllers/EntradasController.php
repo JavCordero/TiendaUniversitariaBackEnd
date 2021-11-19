@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Entrada;
+use App\Http\Resources\EntradaResource;
 
 class EntradasController extends Controller
 {
@@ -13,7 +15,8 @@ class EntradasController extends Controller
      */
     public function index()
     {
-        //
+        $entradas = Entrada::all();
+        return response(['entradas' => EntradaResource::collection($entradas), 'message' => 'Recuperado exitosamente'], 200);
     }
 
     /**

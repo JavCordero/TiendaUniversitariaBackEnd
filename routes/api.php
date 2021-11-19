@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VentasController;
+use App\Http\Controllers\EntradasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('logout', [AuthController::class, 'logout'])->middleware(['auth:api']);
 Route::get('user', [AuthController::class, 'user'])->middleware(['auth:api']);
 
+// Usuarios
+Route::get('users/{id}', [UsersController::class, 'show'])->middleware(['auth:api']);
 
 // Route::group([
 //     'middleware' => ['auth:api', 'rol']
@@ -58,11 +61,16 @@ Route::get('/productos/{id}', [ProductosController::class, 'show']);
 Route::post('/productos', [ProductosController::class, 'store']);
 Route::put('/productos/{id}', [ProductosController::class, 'update']);
 Route::delete('/productos/{id}', [ProductosController::class, 'destroy']);
+Route::get('/productos/stock-criticos', [ProductosController::class, 'stockCriticos'])->middleware(['auth:api', 'scope:administrador']);
 
 //Ventas
 Route::get('/ventas', [VentasController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
 Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api', 'scope:vendedor']);
 Route::get('/correlativo-categorias/{categoria}', [ProductosController::class, 'correlativoCategorias'])->middleware(['auth:api', 'scope:administrador']);
+
+//Entrada
+Route::get('/entradas', [EntradasController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
+
 
 // Route::group([
 //     'prefix' => 'auth'
