@@ -88,4 +88,38 @@ class UsersController extends Controller
         return $administradores;
     }
 
+    public function obtenerNotificaciones(){
+        
+        $usuario = auth()->user();
+
+        //leo las notificaciones
+        $usuario->unreadNotifications->markAsRead();
+
+        $notificacionesActivas = [];
+
+        //muestro solo las que requiera el usuario
+        foreach ($usuario->notifications as $notificacion) {
+            if($notificacion->notificated == 1){
+                array_push($notificacionesActivas,$notificacion);
+            }
+        }
+
+        return response($notificacionesActivas,200);
+    }
+
+    public function eliminarNotificaciones($id){
+        $usuario = auth()->user();
+
+        $notificacion = $usuario->notifications()->find($id);
+        $notificacion->notificated = 0;
+
+        $notificacion->save();
+
+        return response(["message" => "notificacion eliminada"],200);
+    }
+
+    public function obtenerNotificacionesNoLeidas(){
+        return response(["cantidad" => count(auth()->user()->unreadNotifications)],200);
+    }
+
 }

@@ -53,16 +53,20 @@ Route::get('user', [AuthController::class, 'user'])->middleware(['auth:api']);
 // });
 
 // Producto
-Route::get('/productos', [ProductosController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
+Route::get('/productos', [ProductosController::class, 'index'])->middleware(['auth:api']);
 Route::get('/productos/{id}', [ProductosController::class, 'show']);
 Route::post('/productos', [ProductosController::class, 'store']);
 Route::put('/productos/{id}', [ProductosController::class, 'update']);
 Route::delete('/productos/{id}', [ProductosController::class, 'destroy']);
 
 //Ventas
-Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api', 'scope:vendedor']);
+Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api']);
 Route::get('/correlativo-categorias/{categoria}', [ProductosController::class, 'correlativoCategorias'])->middleware(['auth:api', 'scope:administrador']);
 
+Route::get('/notificaciones', [UsersController::class, 'obtenerNotificaciones'])->middleware(['auth:api', 'scope:administrador']);
+Route::get('/notificaciones/no-leidas', [UsersController::class, 'obtenerNotificacionesNoLeidas'])->middleware(['auth:api', 'scope:administrador']);
+Route::put('/notificaciones/{id}', [UsersController::class, 'eliminarNotificaciones'])->middleware(['auth:api', 'scope:administrador']);
+//oute::put('/notificaciones', [UsersController::class, 'leerNotificaciones'])->middleware(['auth:api', 'scope:administrador']);
 // Route::group([
 //     'prefix' => 'auth'
 // ], function () {
