@@ -27,21 +27,21 @@ class InitialSeeder extends Seeder
         User::create([
             'name' => "Pain",
             'email' => "pain@ucn.cl",
-            'password' => bcrypt("123123"),
+            'password' => bcrypt("12341234"),
             'rol' => "administrador",
         ]);
 
         User::create([
             'name' => "Mikasa",
             'email' => "mikasa@ce.ucn.cl",
-            'password' => bcrypt("123123"),
+            'password' => bcrypt("12341234"),
             'rol' => "administrador",
         ]);
 
         User::create([
             'name' => "Reu",
             'email' => "reu@alumnos.ucn.cl",
-            'password' => bcrypt("123123"),
+            'password' => bcrypt("12341234"),
             'rol' => "vendedor",
         ]);
 
