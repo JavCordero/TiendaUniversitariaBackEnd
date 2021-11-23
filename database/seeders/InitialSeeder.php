@@ -85,7 +85,7 @@ class InitialSeeder extends Seeder
         Producto::create([
             'nombre' => "Goma de borrar profesional",
             'descripcion' => "",
-            'codigo_barra' => "071110020003",
+            'codigo_barra' => "0711110020003",
             'codigo_interno' => "002-0003",
             'categoria' => "002",
             'imagen' => "",
