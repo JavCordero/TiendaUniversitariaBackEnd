@@ -65,10 +65,14 @@ Route::get('/productos/stock-criticos', [ProductosController::class, 'stockCriti
 
 //Ventas
 Route::get('/ventas', [VentasController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
+// http://127.0.0.1:8000/api/ventas/reportes?tipo=semana
+Route::get('/ventas/reportes{filtro?}', [VentasController::class, 'ventasReportes'])->middleware(['auth:api', 'scope:administrador']);
+Route::get('/ventas/top{limit?}', [VentasController::class, 'ventasTop'])->middleware(['auth:api', 'scope:administrador']);
 Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api', 'scope:vendedor']);
 Route::get('/correlativo-categorias/{categoria}', [ProductosController::class, 'correlativoCategorias'])->middleware(['auth:api', 'scope:administrador']);
 
 //Entrada
+Route::get('/entradas/reportes', [EntradasController::class, 'entradasReportes'])->middleware(['auth:api', 'scope:administrador']);
 Route::get('/entradas', [EntradasController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
 
 

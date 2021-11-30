@@ -11,6 +11,9 @@ use App\Notifications\AlertaStockCritico;
 use App\Models\Producto;
 use App\Models\Venta;
 use App\Http\Resources\VentaResource;
+use Illuminate\Support\Facades\DB;
+
+use Carbon\Carbon;
 
 class VentasController extends Controller
 {
@@ -77,7 +80,44 @@ class VentasController extends Controller
     public function index()
     {
         $ventas = Venta::all();
-        return response(['ventas' => VentaResource::collection($ventas), 'message' => 'Recuperado exitosamente'], 200);
+        return response(['response' => VentaResource::collection($ventas), 'message' => 'Recuperado exitosamente'], 200);
+
+    }
+
+    public function ventasTop(Request $request)
+    {
+        $limit= $request->get('limit');
+        $ventas = DB::table('ventas')->select(DB::raw('SUM(ventas.cantidad) total, productos.codigo_interno, productos.nombre'))->groupBy('producto_codigo_interno')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->limit($limit)->get();
+        return response(['response' => $ventas, 'message' => 'Recuperado exitosamente'], 200);
+    }
+
+    public function ventasReportes(Request $request)
+    {   
+        $fechaActual= Carbon::now();
+        $diaActual= $fechaActual->day;
+        $mesActual= $fechaActual->month;
+        $semanaActual= $fechaActual->week;
+        $anioActual= $fechaActual->year;
+
+        $filtro= $request->get('filtro');
+
+        if($filtro=="diario"){
+            $grafico= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereDay('fecha', '=' ,$diaActual)->whereMonth('fecha', '=', $mesActual)->whereYear('fecha', '=', $anioActual)->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
+            
+            $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, SUM(ventas.cantidad) cantidad'))->whereDay('fecha', '=' ,$diaActual)->whereMonth('fecha', '=', $mesActual)->whereYear('fecha', '=', $anioActual)->groupBy('ventas.producto_codigo_interno')->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
+            
+            return response(['grafico' => $grafico, 'tabla'=> $tabla,'message' => 'Recuperado exitosamente'], 200);
+
+        }else if($filtro=="semanal"){
+            $respuesta= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereDay('fecha', '=' ,$diaActual)->whereWeek('fecha', '=', $semanaActual)->whereYear('fecha', '=', $anioActual)->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
+            return response(['response' => $respuesta, 'message' => 'Recuperado exitosamente'], 200);
+
+        }else if($filtro=="mensual"){
+            $respuesta= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereDay('fecha', '=' ,$diaActual)->whereMonth('fecha', '=', $mesActual)->whereYear('fecha', '=', $anioActual)->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
+            return response(['response' => $respuesta, 'message' => 'Recuperado exitosamente'], 200);
+        }else{
+
+        }
     }
 
     /**

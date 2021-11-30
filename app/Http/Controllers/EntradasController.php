@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Entrada;
 use App\Http\Resources\EntradaResource;
+use Illuminate\Support\Facades\DB;
 
 class EntradasController extends Controller
 {
@@ -83,5 +84,11 @@ class EntradasController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function entradasReportes()
+    {
+        $entradas= DB::table('entradas')->select(DB::raw('productos.codigo_interno codigo_interno, productos.nombre nombre, entradas.cantidad cantidad, entradas.fecha fecha'))->join('productos', 'productos.codigo_interno', '=', 'entradas.producto_codigo_interno')->get();
+        return response(['response' => $entradas, 'message' => 'Recuperado exitosamente'], 200);
     }
 }
