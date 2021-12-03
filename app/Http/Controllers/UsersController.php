@@ -95,4 +95,10 @@ class UsersController extends Controller
         return $administradores;
     }
 
+    public function obtenerUsuarios()
+    {
+        $usuarios = User::all();
+        return response(['usuarios' => UserResource::collection($usuarios), 'message' => 'Recuperado exitosamente'], 200);
+    }
+
 }
