@@ -18,7 +18,7 @@ class authTest extends TestCase
     public function test_user_login()
     {
         $datos_usuario = [
-            'email'=> 'mikasa@gmail.com',
+            'email'=> 'pain@ucn.cl',
             'password'=> '123123'
         ]; 
         
@@ -30,8 +30,8 @@ class authTest extends TestCase
     {
         
         $usuario = [
-            'name' => 'Luciano',
-            'email' => 'luciano@ucn.cl',
+            'name' => 'Luciano1',
+            'email' => 'luciano12@ucn.cl',
             'password' => '123123',
             'password_confirmed' => '123123',
             'rol' => 'administrador'
@@ -43,7 +43,6 @@ class authTest extends TestCase
 
         $this->json('POST', 'api/register', $usuario , ['Accept' => 'application/json', 'Authorization' => $authorization])
         ->assertStatus(201);
-
     }
 
 
@@ -56,11 +55,4 @@ class authTest extends TestCase
         $this->json('GET', 'api/logout', [] , ['Accept' => 'application/json', 'Authorization' => $authorization])
         ->assertStatus(200);
     }
-
-    /*
-    public function test_a_user_is_autenthicated()
-        $this->assertAuthenticated($guard = null);
-    {
-    */
-    
 }
