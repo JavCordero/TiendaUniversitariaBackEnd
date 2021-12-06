@@ -26,7 +26,6 @@
     <body class="antialiased">
 
         @component('mail::message')
-        # Nombre del administrador (Correo del administrador)
 
         El producto {{$producto->nombre}} ha llegado a su stock critico ({{$producto->stock_critico}}), actualmente quedan {{$producto->cantidad}} unidades.
 
