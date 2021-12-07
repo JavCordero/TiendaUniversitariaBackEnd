@@ -11,6 +11,9 @@ use App\Http\Controllers\UsersController;
 use App\Notifications\AlertaStockCritico;
 use App\Models\Producto;
 use App\Models\Venta;
+use App\Http\Resources\VentaResource;
+
+use Carbon\Carbon;
 
 class VentasController extends Controller
 {
@@ -51,6 +54,7 @@ class VentasController extends Controller
                 array_push($response,$json);
 
                 if($cantidadPostVenta <= $producto->stock_critico){ //falta el && notificated == 0
+                    $producto->fecha_notificacion = Carbon::now();
                     Notification::send($administradores, new AlertaStockCritico($producto));
                 }
 
@@ -84,7 +88,97 @@ class VentasController extends Controller
      */
     public function index()
     {
-        //
+        $ventas = Venta::all();
+        return response(['response' => VentaResource::collection($ventas), 'message' => 'Recuperado exitosamente'], 200);
+
+    }
+
+    public function ventasTop(Request $request)
+    {
+        $limit= $request->get('limit');
+        $ventas = DB::table('ventas')->select(DB::raw('SUM(ventas.cantidad) total, productos.codigo_interno, productos.nombre'))->groupBy('producto_codigo_interno')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->orderBy('total','desc')->limit($limit)->get();
+        return response(['top' => $ventas, 'message' => 'Recuperado exitosamente'], 200);
+    }
+
+    public function ventasBottom(Request $request)
+    {
+        $limit= $request->get('limit');
+        $ventas = DB::table('ventas')->select(DB::raw('SUM(ventas.cantidad) total, productos.codigo_interno, productos.nombre'))->groupBy('producto_codigo_interno')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->orderBy('total','asc')->limit($limit)->get();
+        return response(['bottom' => $ventas, 'message' => 'Recuperado exitosamente'], 200);
+    }
+
+    public function ventasReportes(Request $request)
+    {   
+        $fechaActual= Carbon::now();
+        $diaActual= $fechaActual->day;
+        $mesActual= $fechaActual->month;
+        $semanaActual= $fechaActual->week;
+        $anioActual= $fechaActual->year;
+        $anioInicio = $fechaActual->copy()->startOfYear();
+        $anioFin = $fechaActual->copy()->endOfYear();
+        $inicio1erSemestre = $fechaActual->copy()->startOfYear();//2021-01-01 00:00:00.000000
+        $fin1erSemestre = $fechaActual->copy()->startOfYear()->addMonths(6)->subSeconds(1);//2021-06-30 23:59:59.000000
+        $inicio2doSemestre = $fechaActual->copy()->startOfYear()->addMonths(6); //2021-07-01 00:00:00.000000
+        $fin2doSemestre = $fechaActual->copy()->endOfYear();//2021-12-31 23:59:59.999999
+        // Se puede utilizar este otro método para obtener el inicio y fin de los semestres
+        // $fechaPrueba = Carbon::parse("1800-01-01 00:00:00.000000");
+        // $fechaPrueba->year= Carbon::now()->year;
+        
+        $filtro= $request->get('filtro');
+
+        if($filtro=="diario"){
+            $grafico= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereDay('fecha', '=' ,$diaActual)->whereMonth('fecha', '=', $mesActual)->whereYear('fecha', '=', $anioActual)->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
+            
+            $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, SUM(ventas.cantidad) cantidad,productos.precio precio, ventas.fecha fecha'))->whereDay('fecha', '=' ,$diaActual)->whereMonth('fecha', '=', $mesActual)->whereYear('fecha', '=', $anioActual)->groupBy('ventas.fecha')->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
+            
+            return response(['grafico' => $grafico, 'tabla'=> $tabla,'message' => 'Recuperado exitosamente'], 200);
+
+        }else if($filtro=="semanal"){
+            $grafico= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereBetween('fecha',[Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
+            
+            $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, SUM(ventas.cantidad) cantidad,productos.precio precio, ventas.fecha fecha'))->whereBetween('fecha',[Carbon::now()->startOfWeek(), Carbon::now()->endOfweek()])->groupBy('ventas.fecha')->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
+            
+            return response(['grafico' => $grafico, 'tabla'=> $tabla,'message' => 'Recuperado exitosamente'], 200);
+
+        }else if($filtro=="mensual"){
+
+            $grafico= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereMonth('fecha', '=' ,$mesActual)->whereYear('fecha', '=', $anioActual)->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
+            
+            $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, SUM(ventas.cantidad) cantidad,productos.precio precio, ventas.fecha fecha'))->whereMonth('fecha', '=' ,$mesActual)->whereYear('fecha', '=', $anioActual)->groupBy('ventas.fecha')->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
+            
+            return response(['grafico' => $grafico, 'tabla'=> $tabla,'message' => 'Recuperado exitosamente'], 200);
+
+        }else if($filtro=="semestral"){
+
+            if($fechaActual < $anioInicio->addMonths(6)){
+
+                $grafico= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereBetween('fecha',[$inicio1erSemestre,$fin1erSemestre])->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
+        
+                $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, SUM(ventas.cantidad) cantidad,productos.precio precio, ventas.fecha fecha'))->whereBetween('fecha',[$inicio1erSemestre,$fin1erSemestre])->groupBy('ventas.fecha')->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
+            
+                return response(['grafico' => $grafico, 'tabla'=> $tabla,'message' => 'Recuperado exitosamente'], 200);
+
+            }else{
+
+                $grafico= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereBetween('fecha',[$inicio2doSemestre,$fin2doSemestre])->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
+
+                $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, SUM(ventas.cantidad) cantidad,productos.precio precio, ventas.fecha fecha'))->whereBetween('fecha',[$inicio2doSemestre,$fin2doSemestre])->groupBy('ventas.fecha')->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
+
+                return response(['grafico' => $grafico, 'tabla'=> $tabla,'message' => 'Recuperado exitosamente'], 200);
+            }
+        
+
+        }else if($filtro=="anual"){
+
+            $grafico= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereYear('fecha', '=' ,$anioActual)->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
+            
+            $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, SUM(ventas.cantidad) cantidad,productos.precio precio, ventas.fecha fecha'))->whereYear('fecha', '=' ,$anioActual)->groupBy('ventas.fecha')->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
+            
+            return response(['grafico' => $grafico, 'tabla'=> $tabla,'message' => 'Recuperado exitosamente'], 200);
+    
+        }else{
+            
+        }
     }
 
     /**

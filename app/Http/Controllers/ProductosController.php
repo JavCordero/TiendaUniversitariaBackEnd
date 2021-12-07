@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Producto;
 use App\Notifications\AlertaStockCritico;
 use App\Http\Controllers\UsersController;
+use App\Models\Entrada;
+
+// importamos los Facades
+use Illuminate\Support\Facades\Notification;
+
 
 // importamos la capa de transformacion de Producto
 // razon: transformar de manera fácil y expresiva sus modelos y colecciones de modelos en JSON.
@@ -138,7 +143,12 @@ class ProductosController extends Controller
             if($producto->cantidad <= $producto->stock_critico){
                 Notification::send($administradores, new AlertaStockCritico($producto));
             }
-
+            $entrada = Entrada::create([
+                'user_id' => auth()->user()->id,
+                'producto_codigo_interno' => $producto->codigoProducto,
+                'cantidad' => $producto->cantidadPreVenta,
+                'fecha' => DB::raw('CURRENT_TIMESTAMP'),
+            ]);
             return response(['producto' => new ProductoResource($producto), 'message' => 'Actualizado exitosamente'], 201);
         } else {
             return response(['error' => 'Producto no encontrado'], 400); // OJITO: revisar codigo de respuesta http
@@ -175,6 +185,11 @@ class ProductosController extends Controller
         }
     }
 
+    public function stockCriticos(){
+        $productos= Producto::all();
+        
+    }
+
     public function identificacionProductos()
     {
         $productos = Producto::all();
@@ -186,6 +201,4 @@ class ProductosController extends Controller
         return response(['productos' => ($arreglo), 'message' => 'Recuperado exitosamente'], 200);
        
     }
-
-    
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Producto;
 use App\Models\User;
 use App\Models\Venta;
+use App\Models\Entrada;
 
 // importamos los facades
 use Illuminate\Support\Facades\DB;
@@ -118,6 +119,23 @@ class InitialSeeder extends Seeder
             'cantidad' => 4
         ]);
         Venta::create([
+            'user_id' => 2,
+            'producto_codigo_interno' => "002-0001",
+            'cantidad' => 2
+        ]);
+
+        //Crear Entradas
+        Entrada::create([
+            'user_id' => 1,
+            'producto_codigo_interno' => "002-0002",
+            'cantidad' => 5
+        ]);
+        Entrada::create([
+            'user_id' => 1,
+            'producto_codigo_interno' => "001-0001",
+            'cantidad' => 4
+        ]);
+        Entrada::create([
             'user_id' => 2,
             'producto_codigo_interno' => "002-0001",
             'cantidad' => 2

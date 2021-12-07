@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Resources\UserResource;
 
 class UsersController extends Controller
 {
@@ -46,7 +47,13 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        //
+        // devuelve el primer registro encontrado en la db. Si no existe retorna un null.
+        $usuario = User::find($id);
+        if ($usuario != null) {
+            return response(['usuario' => new UserResource($usuario), 'message' => 'Recuperado exitosamente'], 200);
+        } else {
+            return response(['error' => 'Usuario no encontrado'], 400); // OJITO: revisar codigo de respuesta http
+        }
     }
 
     /**
@@ -86,6 +93,12 @@ class UsersController extends Controller
     public static function obtenerAdministradores(){
         $administradores = User::get()->where("rol","administrador");
         return $administradores;
+    }
+
+    public function obtenerUsuarios()
+    {
+        $usuarios = User::all();
+        return response(['usuarios' => UserResource::collection($usuarios), 'message' => 'Recuperado exitosamente'], 200);
     }
 
     public function obtenerNotificaciones(){
