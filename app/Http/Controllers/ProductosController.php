@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 // importamos los Facades
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +17,7 @@ use App\Models\Entrada;
 
 // importamos los Facades
 use Illuminate\Support\Facades\Notification;
+
 
 // importamos la capa de transformacion de Producto
 // razon: transformar de manera fácil y expresiva sus modelos y colecciones de modelos en JSON.
@@ -141,14 +143,12 @@ class ProductosController extends Controller
             if($producto->cantidad <= $producto->stock_critico){
                 Notification::send($administradores, new AlertaStockCritico($producto));
             }
-
             $entrada = Entrada::create([
                 'user_id' => auth()->user()->id,
                 'producto_codigo_interno' => $producto->codigoProducto,
                 'cantidad' => $producto->cantidadPreVenta,
                 'fecha' => DB::raw('CURRENT_TIMESTAMP'),
             ]);
-
             return response(['producto' => new ProductoResource($producto), 'message' => 'Actualizado exitosamente'], 201);
         } else {
             return response(['error' => 'Producto no encontrado'], 400); // OJITO: revisar codigo de respuesta http
