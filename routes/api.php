@@ -57,7 +57,7 @@ Route::get('usuarios', [UsersController::class, 'obtenerUsuarios'])->middleware(
 // });
 
 // Producto
-Route::get('/productos', [ProductosController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
+Route::get('/productos', [ProductosController::class, 'index'])->middleware(['auth:api']);
 Route::get('/productos/{id}', [ProductosController::class, 'show']);
 Route::post('/productos', [ProductosController::class, 'store']);
 Route::put('/productos/{id}', [ProductosController::class, 'update']);
@@ -67,17 +67,29 @@ Route::get('/productos/stock-criticos', [ProductosController::class, 'stockCriti
 //Ventas
 Route::get('/ventas', [VentasController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
 // http://127.0.0.1:8000/api/ventas/reportes?tipo=semana
-Route::get('/ventas/reportes{filtro?}', [VentasController::class, 'ventasReportes'])->middleware(['auth:api', 'scope:administrador']);
-Route::get('/ventas/top{limit?}', [VentasController::class, 'ventasTop'])->middleware(['auth:api', 'scope:administrador']);
-Route::get('/ventas/bottom{limit?}', [VentasController::class, 'ventasBottom'])->middleware(['auth:api', 'scope:administrador']);
+Route::get('/ventas/reportes{filtro?}', [VentasController::class, 'ventasReportes'])->middleware(['auth:api', 'scope:administrador,vendedor']);
+Route::get('/ventas/top{limit?}', [VentasController::class, 'ventasTop'])->middleware(['auth:api', 'scope:administrador,vendedor']);
+Route::get('/ventas/bottom{limit?}', [VentasController::class, 'ventasBottom'])->middleware(['auth:api', 'scope:administrador,vendedor']);
 Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api']);
 Route::get('/correlativo-categorias/{categoria}', [ProductosController::class, 'correlativoCategorias'])->middleware(['auth:api', 'scope:administrador']);
 
 //Entrada
-Route::get('/entradas/reportes', [EntradasController::class, 'entradasReportes'])->middleware(['auth:api', 'scope:administrador']);
+Route::get('/entradas/reportes', [EntradasController::class, 'entradasReportes'])->middleware(['auth:api', 'scope:administrador,vendedor']);
 Route::get('/entradas', [EntradasController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
-Route::get('/entradas/rotacion{filtro?}', [EntradasController::class, 'entradasReportesFiltro'])->middleware(['auth:api', 'scope:administrador']);
+Route::get('/entradas/rotacion{filtro?}', [EntradasController::class, 'entradasReportesFiltro'])->middleware(['auth:api', 'scope:administrador,vendedor']);
 
+
+
+Route::get('/identificacion-productos', [ProductosController::class, 'identificacionProductos']);
+
+//Ventas
+Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api']);
+Route::get('/correlativo-categorias/{categoria}', [ProductosController::class, 'correlativoCategorias'])->middleware(['auth:api', 'scope:administrador']);
+
+Route::get('/notificaciones', [UsersController::class, 'obtenerNotificaciones'])->middleware(['auth:api', 'scope:administrador']);
+Route::get('/notificaciones/no-leidas', [UsersController::class, 'obtenerNotificacionesNoLeidas'])->middleware(['auth:api', 'scope:administrador']);
+Route::put('/notificaciones/{id}', [UsersController::class, 'eliminarNotificaciones'])->middleware(['auth:api', 'scope:administrador']);
+//oute::put('/notificaciones', [UsersController::class, 'leerNotificaciones'])->middleware(['auth:api', 'scope:administrador']);
 
 // Route::group([
 //     'prefix' => 'auth'

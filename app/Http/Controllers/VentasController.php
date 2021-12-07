@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\UsersController;
 
@@ -11,7 +12,6 @@ use App\Notifications\AlertaStockCritico;
 use App\Models\Producto;
 use App\Models\Venta;
 use App\Http\Resources\VentaResource;
-use Illuminate\Support\Facades\DB;
 
 use Carbon\Carbon;
 
@@ -58,6 +58,13 @@ class VentasController extends Controller
                     Notification::send($administradores, new AlertaStockCritico($producto));
                 }
 
+                $venta = Venta::create([
+                    'user_id' => auth()->user()->id,
+                    'producto_codigo_interno' => $codigoProducto,
+                    'cantidad' => $cantidadPreVenta,
+                    'fecha' => DB::raw('CURRENT_TIMESTAMP'),
+                ]);
+
                 $producto->save();
 
             }
@@ -70,6 +77,7 @@ class VentasController extends Controller
         }
 
         return response($response,200);
+        // return response(["message" => "hola uwu"],200);
 
     }
 
