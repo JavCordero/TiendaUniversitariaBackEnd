@@ -54,6 +54,7 @@ class VentasController extends Controller
                 array_push($response,$json);
 
                 if($cantidadPostVenta <= $producto->stock_critico){ //falta el && notificated == 0
+                    $producto->fecha_notificacion = Carbon::now();
                     Notification::send($administradores, new AlertaStockCritico($producto));
                 }
 

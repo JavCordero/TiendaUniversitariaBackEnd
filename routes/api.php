@@ -70,7 +70,7 @@ Route::get('/ventas', [VentasController::class, 'index'])->middleware(['auth:api
 Route::get('/ventas/reportes{filtro?}', [VentasController::class, 'ventasReportes'])->middleware(['auth:api', 'scope:administrador']);
 Route::get('/ventas/top{limit?}', [VentasController::class, 'ventasTop'])->middleware(['auth:api', 'scope:administrador']);
 Route::get('/ventas/bottom{limit?}', [VentasController::class, 'ventasBottom'])->middleware(['auth:api', 'scope:administrador']);
-Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api', 'scope:vendedor']);
+Route::post('/ventas/masiva', [VentasController::class, 'ventasMasiva'])->middleware(['auth:api']);
 Route::get('/correlativo-categorias/{categoria}', [ProductosController::class, 'correlativoCategorias'])->middleware(['auth:api', 'scope:administrador']);
 
 //Entrada

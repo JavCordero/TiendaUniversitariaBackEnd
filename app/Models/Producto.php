@@ -26,7 +26,8 @@ class Producto extends Model
         'imagen',
         'precio',
         'cantidad',
-        'stock_critico'
+        'stock_critico',
+        'fecha_notificacion'
     ];
 
     // Relacion N a M

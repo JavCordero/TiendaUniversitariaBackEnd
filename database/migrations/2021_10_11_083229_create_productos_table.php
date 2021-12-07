@@ -26,6 +26,7 @@ class CreateProductosTable extends Migration
             $table->integer('precio');
             $table->integer('cantidad');
             $table->integer('stock_critico');
+            $table->timestamp('fecha_notificacion', $precision = 0)->nullable();
             $table->boolean('estado');
         });
     }
