@@ -15,9 +15,6 @@ use App\Notifications\AlertaStockCritico;
 use App\Http\Controllers\UsersController;
 use App\Models\Entrada;
 
-// importamos los Facades
-use Illuminate\Support\Facades\Notification;
-
 
 // importamos la capa de transformacion de Producto
 // razon: transformar de manera fácil y expresiva sus modelos y colecciones de modelos en JSON.
