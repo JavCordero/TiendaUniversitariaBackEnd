@@ -129,14 +129,14 @@ class VentasController extends Controller
         if($filtro=="diario"){
             $grafico= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereDay('fecha', '=' ,$diaActual)->whereMonth('fecha', '=', $mesActual)->whereYear('fecha', '=', $anioActual)->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
             
-            $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, SUM(ventas.cantidad) cantidad,productos.precio precio, ventas.fecha fecha'))->whereDay('fecha', '=' ,$diaActual)->whereMonth('fecha', '=', $mesActual)->whereYear('fecha', '=', $anioActual)->groupBy('ventas.fecha')->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
+            $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, ventas.cantidad cantidad,productos.precio precio, ventas.fecha fecha'))->whereDay('fecha', '=' ,$diaActual)->whereMonth('fecha', '=', $mesActual)->whereYear('fecha', '=', $anioActual)->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
             
             return response(['grafico' => $grafico, 'tabla'=> $tabla,'message' => 'Recuperado exitosamente'], 200);
 
         }else if($filtro=="semanal"){
             $grafico= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereBetween('fecha',[Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
             
-            $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, SUM(ventas.cantidad) cantidad,productos.precio precio, ventas.fecha fecha'))->whereBetween('fecha',[Carbon::now()->startOfWeek(), Carbon::now()->endOfweek()])->groupBy('ventas.fecha')->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
+            $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, ventas.cantidad cantidad,productos.precio precio, ventas.fecha fecha'))->whereBetween('fecha',[Carbon::now()->startOfWeek(), Carbon::now()->endOfweek()])->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
             
             return response(['grafico' => $grafico, 'tabla'=> $tabla,'message' => 'Recuperado exitosamente'], 200);
 
@@ -144,7 +144,7 @@ class VentasController extends Controller
 
             $grafico= DB::table("ventas")->select(DB::raw('users.name nombre, SUM(ventas.cantidad) cantidad'))->whereMonth('fecha', '=' ,$mesActual)->whereYear('fecha', '=', $anioActual)->groupBy('user_id')->join('users', 'users.id', '=', 'ventas.user_id')->get();
             
-            $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, SUM(ventas.cantidad) cantidad,productos.precio precio, ventas.fecha fecha'))->whereMonth('fecha', '=' ,$mesActual)->whereYear('fecha', '=', $anioActual)->groupBy('ventas.fecha')->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
+            $tabla= DB::table("ventas")->select(DB::raw('users.name nombre_usuario, productos.nombre nombre_producto, productos.codigo_interno codigo_interno, ventas.cantidad cantidad,productos.precio precio, ventas.fecha fecha'))->whereMonth('fecha', '=' ,$mesActual)->whereYear('fecha', '=', $anioActual)->join('users', 'users.id', '=', 'ventas.user_id')->join('productos', 'productos.codigo_interno', '=', 'ventas.producto_codigo_interno')->get();
             
             return response(['grafico' => $grafico, 'tabla'=> $tabla,'message' => 'Recuperado exitosamente'], 200);
 
