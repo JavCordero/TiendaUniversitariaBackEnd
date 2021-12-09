@@ -14,6 +14,7 @@ use App\Models\Producto;
 use App\Notifications\AlertaStockCritico;
 use App\Http\Controllers\UsersController;
 use App\Models\Entrada;
+use App\Models\Venta;
 
 
 // importamos la capa de transformacion de Producto
@@ -140,12 +141,14 @@ class ProductosController extends Controller
             if($producto->cantidad <= $producto->stock_critico){
                 Notification::send($administradores, new AlertaStockCritico($producto));
             }
+            
             $entrada = Entrada::create([
                 'user_id' => auth()->user()->id,
-                'producto_codigo_interno' => $producto->codigoProducto,
-                'cantidad' => $producto->cantidadPreVenta,
+                'producto_codigo_interno' => $producto->codigo_interno,
+                'cantidad' => $producto->cantidad,
                 'fecha' => DB::raw('CURRENT_TIMESTAMP'),
             ]);
+            
             return response(['producto' => new ProductoResource($producto), 'message' => 'Actualizado exitosamente'], 201);
         } else {
             return response(['error' => 'Producto no encontrado'], 400); // OJITO: revisar codigo de respuesta http
