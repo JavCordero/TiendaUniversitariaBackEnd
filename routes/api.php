@@ -60,7 +60,7 @@ Route::get('usuarios', [UsersController::class, 'obtenerUsuarios'])->middleware(
 Route::get('/productos', [ProductosController::class, 'index'])->middleware(['auth:api']);
 Route::get('/productos/{id}', [ProductosController::class, 'show']);
 Route::post('/productos', [ProductosController::class, 'store']);
-Route::put('/productos/{id}', [ProductosController::class, 'update'])->middleware(['auth:api', 'scope:administrador,vendedor']);
+Route::put('/productos/{id}/{cantidad_modificada}', [ProductosController::class, 'update'])->middleware(['auth:api', 'scope:administrador,vendedor']);
 Route::delete('/productos/{id}', [ProductosController::class, 'destroy']);
 Route::get('/productos/stock-criticos', [ProductosController::class, 'stockCriticos'])->middleware(['auth:api', 'scope:administrador']);
 

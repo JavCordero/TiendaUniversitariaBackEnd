@@ -108,7 +108,7 @@ class ProductosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $cantidad_modificada)
     {
        
         $data = $request->all();
@@ -141,13 +141,15 @@ class ProductosController extends Controller
             if($producto->cantidad <= $producto->stock_critico){
                 Notification::send($administradores, new AlertaStockCritico($producto));
             }
-            
-            $entrada = Entrada::create([
-                'user_id' => auth()->user()->id,
-                'producto_codigo_interno' => $producto->codigo_interno,
-                'cantidad' => $producto->cantidad,
-                'fecha' => DB::raw('CURRENT_TIMESTAMP'),
-            ]);
+            if($cantidad_modificada != 0){
+                $entrada = Entrada::create([
+                    'user_id' => auth()->user()->id,
+                    'producto_codigo_interno' => $producto->codigo_interno,
+                    'cantidad' => $cantidad_modificada,
+                    'fecha' => DB::raw('CURRENT_TIMESTAMP'),
+                ]);
+            }
+           
             
             return response(['producto' => new ProductoResource($producto), 'message' => 'Actualizado exitosamente'], 201);
         } else {
