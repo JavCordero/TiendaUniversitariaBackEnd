@@ -75,7 +75,7 @@ Route::get('/correlativo-categorias/{categoria}', [ProductosController::class, '
 
 //Entrada
 Route::get('/entradas/reportes', [EntradasController::class, 'entradasReportes'])->middleware(['auth:api', 'scope:administrador,vendedor']);
-Route::get('/entradas', [EntradasController::class, 'index'])->middleware(['auth:api', 'scope:administrador']);
+Route::get('/entradas', [EntradasController::class, 'index'])->middleware(['auth:api', 'scope:administrador,vendedor']);
 Route::get('/entradas/rotacion{filtro?}', [EntradasController::class, 'entradasReportesFiltro'])->middleware(['auth:api', 'scope:administrador,vendedor']);
 
 
